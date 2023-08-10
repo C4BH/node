@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>product</title>
+</head>
+<body>
+        <h1>products</h1>
+        <p>
+            <%= urunler[0].id %>
+            <%= urunler[0].name %>
+            <%= urunler[0].price %>
+        </p>
+
+        <ul>
+
+            <% urunler.forEach(urun => { %>
+
+                <% if (urun.price<=450 && urun.isActive ) { %>
+                    <li>
+                        <a href ="/products/<%= urun.id %>">
+                            <%= urun.name%> - <%= urun.price%> 
+                        </a>
+                          
+                     </li>
+                <% } %>
+                   
+            <%})%>
+
+        </ul>
+
+
+</body>
+</html>

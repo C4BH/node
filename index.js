@@ -1,45 +1,31 @@
-const http = require("http");
-const fs = require("fs");
+const express = require("express");
+const app = express();
 
-var server = http.createServer((req, res) => {
-    console.log(req.url);
+const data = [
+    {id: 1, name: "Ozekin", price: 300, isActive: true},
+    {id: 2, name: "Ozekiin", price: 444, isActive: false},
+    {id: 3, name: "Ozekiiin", price: 555, isActive: true}
+];
 
-    if (req.url === "/") {
-        fs.readFile("first.html", (err, html) => {
-            if (err) {
-                res.writeHead(500);
-                res.end("Error loading index.html");
-            } else {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.write(html);
-                res.end();
-            }
-        });
-    } else if (req.url === "/products") {
-        fs.readFile("uruns.html", (err, html) => {
-            if (err) {
-                res.writeHead(500);
-                res.end("Error loading urunler.html");
-            } else {
-                res.writeHead(200, { "Content-Type": "text/html" });
-                res.write(html);
-                res.end();
-            }
-        });
+app.set("view engine", "ejs");
+
+app.get('/products/:id', function (req, res) {
+    const urun = data.find(u => u.id == req.params.id);
+    if (urun) {
+        res.render("details", { urun });
     } else {
-        fs.readFile("404.html", (err, html) => {
-            if (err) {
-                res.writeHead(500);
-                res.end("Error loading 404.html");
-            } else {
-                res.writeHead(404, { "Content-Type": "text/html" });
-                res.write(html);
-                res.end();
-            }
-        });
+        res.status(404).send('Ürün bulunamadı');
     }
 });
 
-server.listen(3000, () => {
-    console.log("Server is running on http://localhost:3000");
+app.get('/products', function (req, res) {
+    res.render("products", { urunler: data });
+});
+
+app.use("/", function (req, res) {
+    res.status(404).send('404 Not Found');
+});
+
+app.listen(3000, () =>{
+    console.log("App is running on port 3000");
 });
